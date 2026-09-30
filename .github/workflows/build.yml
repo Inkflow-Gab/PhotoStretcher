@@ -25,8 +25,14 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Set up the Android SDK
-        uses: android-actions/setup-android@v3
+      # The hosted runner image already contains the Android SDK with the platform and the
+      # build tools this project needs, so there is nothing to install here.
+      - name: Show the Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+          ls "${ANDROID_HOME:-$ANDROID_SDK_ROOT}/platforms" || true
+          ls "${ANDROID_HOME:-$ANDROID_SDK_ROOT}/build-tools" || true
 
       - name: Make the wrapper executable
         run: chmod +x gradlew
