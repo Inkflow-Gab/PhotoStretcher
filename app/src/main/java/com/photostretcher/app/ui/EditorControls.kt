@@ -44,8 +44,14 @@ class EditorControls {
 
     val factor: Float get() = percent / 100f
 
+    /** Slider bounds in percent, for the [androidx.compose.material3.Slider]. */
     val stretchRange: ClosedFloatingPointRange<Float>
         get() = if (squash) SQUASH_RANGE else STRETCH_RANGE
+
+    /** Slider bounds as whole percent, used to clamp what the slider hands us. */
+    val percentMin: Int get() = if (squash) SQUASH_MIN else STRETCH_MIN
+
+    val percentMax: Int get() = if (squash) SQUASH_MAX else STRETCH_MAX
 
     /** `true` when there is something to save. */
     val canSave: Boolean get() = hasBand && percent != 100
@@ -93,10 +99,7 @@ class EditorControls {
     // ----------------------------------------------------------------- actions
 
     fun setPercent(value: Float) {
-        percent = value.roundToInt().coerceIn(
-            stretchRange.start.roundToInt(),
-            stretchRange.end.roundToInt(),
-        )
+        percent = value.roundToInt().coerceIn(percentMin, percentMax)
     }
 
     fun resetLines() {
@@ -132,7 +135,12 @@ class EditorControls {
         /** Smallest gap between the two lines, as a fraction of the picture. */
         const val MIN_GAP = 0.025f
 
-        val STRETCH_RANGE = 100f..400f
-        val SQUASH_RANGE = 25f..100f
+        const val STRETCH_MIN = 100
+        const val STRETCH_MAX = 400
+        const val SQUASH_MIN = 25
+        const val SQUASH_MAX = 100
+
+        val STRETCH_RANGE = STRETCH_MIN.toFloat()..STRETCH_MAX.toFloat()
+        val SQUASH_RANGE = SQUASH_MIN.toFloat()..SQUASH_MAX.toFloat()
     }
 }

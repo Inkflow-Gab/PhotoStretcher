@@ -13,7 +13,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
@@ -25,6 +24,7 @@ import com.photostretcher.app.model.Axis
 import com.photostretcher.app.ui.theme.Accent
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.math.round
 
 /** Hit test result meaning "the finger is inside the band, drag the whole band". */
 private const val TARGET_BAND = -1
@@ -112,7 +112,7 @@ class ResultLayout(
      * The three strips of the technical rule: everything above the band, the band itself,
      * everything below. Strips too thin to see are still returned, the caller skips them.
      */
-    fun strips(): List<Strip> = listOf(
+    private fun strips(): List<Strip> = listOf(
         Strip(0, aSize.toInt(), 0f, aSize * scale),
         Strip(aSize.toInt(), bSize.toInt(), aSize * scale, bSize * factor * scale),
         Strip((aSize + bSize).toInt(), cSize.toInt(), (aSize + bSize * factor) * scale, cSize * scale),
@@ -223,19 +223,38 @@ fun PhotoCanvas(
             val handleRadius = 11.dp.toPx()
             val overhang = 14.dp.toPx()
 
+            // Integer destination edges. Rounding the *boundaries* rather than each strip's own
+            // size is what keeps two neighbouring strips flush against each other, so no hairline
+            // gap can appear between them however the fractions fall.
+            val crossFrom = round(layout.crossStart).toInt()
+            val crossTo = round(layout.crossStart + layout.crossSize).toInt().coerceAtLeast(crossFrom + 1)
+            val crossLength = crossTo - crossFrom
+
             fun drawStrip(strip: Strip, alpha: Float = 1f) {
-                if (strip.srcSize <= 0 || strip.dstSize < 0.5f) return
-                val srcOffset = if (vertical) IntOffset(strip.srcStart, 0) else IntOffset(0, strip.srcStart)
-                val srcSize = if (vertical) IntSize(strip.srcSize, image.height) else IntSize(image.width, strip.srcSize)
-                val dstOffset = if (vertical) {
-                    Offset(layout.crossStart, layout.axisStart + strip.dstStart)
+                if (strip.srcSize <= 0 || strip.dstSize <= 0f) return
+                val from = round(layout.axisStart + strip.dstStart).toInt()
+                val to = round(layout.axisStart + strip.dstStart + strip.dstSize)
+                    .toInt().coerceAtLeast(from + 1)
+                val length = to - from
+                val srcOffset = if (vertical) {
+                    IntOffset(strip.srcStart, 0)
                 } else {
-                    Offset(layout.axisStart + strip.dstStart, layout.crossStart)
+                    IntOffset(0, strip.srcStart)
+                }
+                val srcSize = if (vertical) {
+                    IntSize(strip.srcSize, image.height)
+                } else {
+                    IntSize(image.width, strip.srcSize)
+                }
+                val dstOffset = if (vertical) {
+                    IntOffset(crossFrom, from)
+                } else {
+                    IntOffset(from, crossFrom)
                 }
                 val dstSize = if (vertical) {
-                    Size(layout.crossSize, strip.dstSize)
+                    IntSize(crossLength, length)
                 } else {
-                    Size(strip.dstSize, layout.crossSize)
+                    IntSize(length, crossLength)
                 }
                 drawImage(
                     image = image,
@@ -244,7 +263,6 @@ fun PhotoCanvas(
                     dstOffset = dstOffset,
                     dstSize = dstSize,
                     alpha = alpha,
-                    filterQuality = FilterQuality.Medium,
                 )
             }
 
@@ -263,9 +281,13 @@ fun PhotoCanvas(
                     val fadeSource = min(fade, min(above.srcSize.toFloat(), below.srcSize.toFloat()))
                     val aboveSource = above.srcStart + (above.srcSize - fadeSource).toInt()
                     val aboveEdge = above.dstStart + above.dstSize
-                    for (step in 0 until fadeSteps) {
-                        val from = step / fadeSteps.toFloat()
-                        val to = (step + 1) / fadeSteps.toFloat()
+                    // Strips are drawn on whole pixels, so never plan for more steps than the
+                    // seam has pixels, otherwise every step would snap to 1px and the blend would
+                    // end up wider than the seam it is meant to cover.
+                    val steps = min(fadeSteps, fade.toInt().coerceAtLeast(1))
+                    for (step in 0 until steps) {
+                        val from = step / steps.toFloat()
+                        val to = (step + 1) / steps.toFloat()
                         val middle = (from + to) / 2f
                         drawStrip(
                             Strip(
