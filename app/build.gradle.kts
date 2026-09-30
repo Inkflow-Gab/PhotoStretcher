@@ -19,17 +19,6 @@ android {
         resourceConfigurations += listOf("en")
     }
 
-    signingConfigs {
-        // Lets CI produce an installable release APK without any secrets.
-        // The debug key is generated automatically by the Android Gradle Plugin.
-        getByName("debug") {
-            storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
-    }
-
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
@@ -42,6 +31,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // Lets CI produce an installable release APK without any secrets. The debug signing
+            // config points at ~/.android/debug.keystore, which the Android Gradle Plugin
+            // generates on the first build when it is missing, so there is nothing to commit
+            // and nothing to configure.
             signingConfig = signingConfigs.getByName("debug")
         }
     }

@@ -30,7 +30,7 @@ import kotlin.math.round
 private const val TARGET_BAND = -1
 
 /** A straight strip of the source picture, drawn into the result. */
-private data class Strip(
+internal data class Strip(
     val srcStart: Int,
     val srcSize: Int,
     /** Distance from the top (or left) of the drawn result, in screen pixels. */
@@ -112,7 +112,7 @@ class ResultLayout(
      * The three strips of the technical rule: everything above the band, the band itself,
      * everything below. Strips too thin to see are still returned, the caller skips them.
      */
-    private fun strips(): List<Strip> = listOf(
+    fun strips(): List<Strip> = listOf(
         Strip(0, aSize.toInt(), 0f, aSize * scale),
         Strip(aSize.toInt(), bSize.toInt(), aSize * scale, bSize * factor * scale),
         Strip((aSize + bSize).toInt(), cSize.toInt(), (aSize + bSize * factor) * scale, cSize * scale),
