@@ -198,9 +198,14 @@ class StretchMathTest {
     fun `mixing both axes is detected`() {
         val v = StretchOp(Axis.VERTICAL, 0.4f, 0.6f, 2f)
         val h = StretchOp(Axis.HORIZONTAL, 0.4f, 0.6f, 2f)
-        assertTrue(StretchMath.isSingleAxis(listOf(v)))
-        assertTrue(StretchMath.isSingleAxis(listOf(v, h.copy(bandStart = 0.2f, bandEnd = 0.3f))))
-        assertTrue(!StretchMath.isSingleAxis(listOf(v, h)))
+        assertTrue("one axis only", StretchMath.isSingleAxis(listOf(v)))
+        assertTrue("an empty edit is not a conflict", StretchMath.isSingleAxis(emptyList()))
+        assertTrue("both axes means the slow path", !StretchMath.isSingleAxis(listOf(v, h)))
+        // A no-op on the other axis is not a conflict: it would not change anything.
+        assertTrue(
+            "a no-op on the other axis does not count",
+            StretchMath.isSingleAxis(listOf(v, StretchOp(Axis.HORIZONTAL, 0.2f, 0.3f, 1f))),
+        )
     }
 
     @Test
