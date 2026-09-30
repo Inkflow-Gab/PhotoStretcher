@@ -37,6 +37,9 @@ jobs:
       - name: Make the wrapper executable
         run: chmod +x gradlew
 
+      - name: Run the unit tests
+        run: ./gradlew --no-daemon test
+
       - name: Build APKs
         run: ./gradlew --no-daemon --stacktrace assembleDebug assembleRelease
 
@@ -55,4 +58,5 @@ jobs:
           path: |
             app/build/reports/
             app/build/outputs/logs/
+            app/build/test-results/
           if-no-files-found: ignore

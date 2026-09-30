@@ -132,22 +132,32 @@ object StretchMath {
             val span = piece.dstEnd - piece.dstStart
             val slope = if (span > 0f) (piece.srcEnd - piece.srcStart) / span else 0f
 
+            // Everything below is in *destination* space: this op maps the current image onto
+            // the new one, so a piece's new-image extent is toDest of its current-image extent.
+            val newFrom = toDest(piece.dstStart)
+            val newTo = toDest(piece.dstEnd)
+
             // Source position of a destination position: the piece is a straight cut, so it
             // is a plain linear walk along it.
             fun srcAt(d: Float): Float = piece.srcStart + (toSrc(d) - piece.dstStart) * slope
 
-            // Places where the mapping bends. A cut that spans one of them has to be split.
-            val bends = listOf(b0, b1, b0 + stretchedBand)
-                .filter { it > piece.dstStart && it < piece.dstEnd }
+            // The two places where the slope changes, in destination space: the top of the band
+            // and the bottom of the stretched band. b1 is a *current image* position and must
+            // not be used here, it belongs to the other end of the same bend. A cut that spans
+            // one of these has to be split, otherwise one straight cut cannot represent it.
+            val bends = listOf(b0, b0 + stretchedBand)
+                .filter { it > newFrom && it < newTo }
                 .distinct()
                 .sorted()
 
-            var from = piece.dstStart
+            var from = newFrom
             for (bend in bends) {
-                next += Piece(srcAt(from), srcAt(bend), toDest(from), toDest(bend))
+                next += Piece(srcAt(from), srcAt(bend), from, bend)
                 from = bend
             }
-            next += Piece(srcAt(from), srcAt(piece.dstEnd), toDest(from), toDest(piece.dstEnd))
+            // srcAt(newFrom) is the piece's own srcStart and srcAt(newTo) its srcEnd, so the
+            // ends of the piece carry over unchanged.
+            next += Piece(srcAt(from), srcAt(newTo), from, newTo)
         }
         return next to toDest(length)
     }

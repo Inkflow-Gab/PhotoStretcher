@@ -43,9 +43,13 @@ See [NOTES.md](NOTES.md) for how the stretch maths works.
 
 ## Building the APK
 
-The repository builds itself on GitHub Actions: push to `main` and the workflow compiles both
-a debug and a release APK and attaches them to the run as the artifact
-**`photo-stretcher-apks`**.
+The repository builds itself on GitHub Actions: push to `main` and the workflow runs the unit
+tests, then compiles both a debug and a release APK and attaches them to the run as the
+artifact **`photo-stretcher-apks`**.
+
+```bash
+./gradlew test                # checks the stretch maths, no device needed
+```
 
 You can also build it yourself, everything is checked in:
 
@@ -126,6 +130,10 @@ app/src/main/java/com/photostretcher/app/
     ├── EditorScreen.kt      the editor
     ├── HomeScreen.kt        the start screen
     └── theme/Theme.kt       dark colour scheme
+
+app/src/test/java/com/photostretcher/app/engine/
+└── StretchMathTest.kt       walks every layout the way drawBitmap does and checks that the
+                             source is covered once, in order, and that only the band moved
 ```
 
 The rule that keeps preview and export identical: **line positions are stored as a fraction of

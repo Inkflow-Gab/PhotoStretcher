@@ -60,6 +60,14 @@ one `drawBitmap(src, dst)` call. No intermediate bitmaps, so ten chained 4x stre
 same memory as one, and there is no accumulated resampling error: the unstretched parts are a
 1:1 blit whenever the scale is 1.
 
+One subtlety worth spelling out, because getting it wrong is silent: the two places where the
+fold has to split a cut are `b0` and `b0 + stretchedBand`, both measured in **destination**
+space. `b1` is a position in the *current* image and must not be used as a split point. Adding
+it in shifts every later boundary and quietly truncates the bottom of the photo, while the
+overall output size stays exactly right, so nothing looks wrong until you look at the pixels.
+`StretchMathTest` walks each layout the way `drawBitmap` does and checks that the source is
+covered once, in order, from row 0 to the last row, which is what catches this.
+
 If the user mixes horizontal and vertical stretches in the same edit, `StretchRenderer` falls
 back to applying them one after the other. That is only reachable by flipping the mode chip
 mid edit, so the slower path is fine there.
