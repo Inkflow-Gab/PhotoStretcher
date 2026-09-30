@@ -112,7 +112,7 @@ class ResultLayout(
      * The three strips of the technical rule: everything above the band, the band itself,
      * everything below. Strips too thin to see are still returned, the caller skips them.
      */
-    fun strips(): List<Strip> = listOf(
+    internal fun strips(): List<Strip> = listOf(
         Strip(0, aSize.toInt(), 0f, aSize * scale),
         Strip(aSize.toInt(), bSize.toInt(), aSize * scale, bSize * factor * scale),
         Strip((aSize + bSize).toInt(), cSize.toInt(), (aSize + bSize * factor) * scale, cSize * scale),
