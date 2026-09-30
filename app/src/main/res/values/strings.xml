@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Photo Stretcher</string>
+
+    <!-- Home -->
+    <string name="home_subtitle">Stretch one band of a photo. Everything above and below it stays exactly the same.</string>
+    <string name="home_pick_photo">Pick Photo</string>
+    <string name="home_step_1">Pick a photo from your gallery.</string>
+    <string name="home_step_2">Tap the photo twice to mark a band with two lines.</string>
+    <string name="home_step_3">Drag the lines, then stretch the band between them.</string>
+    <string name="home_step_4">Save it as a new picture in Pictures/PhotoStretcher.</string>
+    <string name="home_privacy">Works completely offline. No ads, no account, nothing leaves your phone.</string>
+
+    <!-- Editor -->
+    <string name="action_back">Back</string>
+    <string name="action_save">Save</string>
+    <string name="action_share">Share</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_restart">Restart</string>
+
+    <string name="control_stretch">Stretch</string>
+    <string name="control_squash">Squash</string>
+    <string name="control_horizontal">Horizontal</string>
+    <string name="control_vertical">Vertical</string>
+    <string name="control_smooth">Smooth edges</string>
+
+    <string name="hint_first">Tap the photo to place the first line</string>
+    <string name="hint_second">Tap again to place the second line</string>
+    <string name="hint_ready">Drag the lines, then move the slider</string>
+    <string name="hint_applied">Stretch applied. Tap the photo to choose the next band.</string>
+
+    <string name="saved">Saved to Pictures/%1$s</string>
+    <string name="saved_smaller">Saved smaller so it fits in memory.</string>
+    <string name="share_chooser">Share photo</string>
+
+    <string name="discard_title">Discard changes?</string>
+    <string name="discard_text">Your stretch has not been saved yet.</string>
+    <string name="discard_confirm">Discard</string>
+    <string name="discard_keep">Keep editing</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Android 8 and 9: the file we wrote into Pictures/PhotoStretcher. -->
+    <external-path name="pictures" path="Pictures/PhotoStretcher/" />
+    <external-files-path name="app_pictures" path="Pictures/" />
+    <cache-path name="cache" path="." />
+</paths>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- dark rounded backdrop -->
+    <path
+        android:fillColor="#0E1620"
+        android:pathData="M18,10 h72 a8,8 0 0 1 8,8 v72 a8,8 0 0 1 -8,8 h-72 a8,8 0 0 1 -8,-8 v-72 a8,8 0 0 1 8,-8 z" />
+
+    <!-- the part above the band -->
+    <path
+        android:fillColor="#22D3EE"
+        android:pathData="M29,26 H79 a4,4 0 0 1 4,4 v7 a4,4 0 0 1 -4,4 H29 a4,4 0 0 1 -4,-4 v-7 a4,4 0 0 1 4,-4 z" />
+
+    <!-- the part below the band -->
+    <path
+        android:fillColor="#22D3EE"
+        android:pathData="M29,67 H79 a4,4 0 0 1 4,4 v7 a4,4 0 0 1 -4,4 H29 a4,4 0 0 1 -4,-4 v-7 a4,4 0 0 1 4,-4 z" />
+
+    <!-- the band being pulled apart -->
+    <path
+        android:fillColor="#0E1620"
+        android:pathData="M29,44 H79 a4,4 0 0 1 4,4 v12 a4,4 0 0 1 -4,4 H29 a4,4 0 0 1 -4,-4 v-12 a4,4 0 0 1 4,-4 z" />
+
+    <!-- the two seam lines -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M25,45 H83" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M25,63 H83" />
+
+    <!-- up and down arrows inside the band -->
+    <path
+        android:strokeColor="#FACC15"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M54,50 V58" />
+    <path
+        android:strokeColor="#FACC15"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M49,54 L54,47 L59,54" />
+    <path
+        android:strokeColor="#FACC15"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M49,54 L54,61 L59,54" />
+</vector>
